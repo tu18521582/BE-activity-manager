@@ -1,0 +1,3 @@
+rootProject.name = 'activity-crud'
+include 'activity-crud-service'
+include 'activity-crud-migration'

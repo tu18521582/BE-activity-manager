@@ -1,0 +1,30 @@
+spring:
+  main:
+    web-environment: false
+    web-application-type: none
+  application:
+    name: activity-crud-migration
+    profiles:
+      active: local
+  datasource:
+    url: jdbc:postgresql://localhost:5432/activity?currentSchema=activity
+    driver-class-name: org.postgresql.Driver
+    username: postgres
+    password: 123456
+    initialize: false
+  jpa:
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+
+logging:
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss} - %msg%n'
+  level:
+    com:
+      kmstechnology:
+        activitycrud: INFO
+    org:
+      flywaydb: INFO

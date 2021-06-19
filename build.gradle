@@ -1,0 +1,28 @@
+plugins {
+  id 'org.springframework.boot' version '2.5.1'
+  id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+  id 'java'
+  id 'net.ltgt.errorprone' version '2.0.0'
+}
+
+group = 'com.kms-technology'
+version = '0.0.1-SNAPSHOT'
+
+repositories {
+  mavenCentral()
+}
+
+allprojects {
+  sourceCompatibility = '1.8'
+
+  dependencyManagement {
+    dependencies {
+      dependency('org.springframework.boot:spring-boot-starter:2.5.1')
+      dependency('org.springframework.boot:spring-boot-starter-test:2.5.1')
+    }
+  }
+}
+
+test {
+  useJUnitPlatform()
+}

@@ -1,0 +1,31 @@
+plugins {
+  id 'org.springframework.boot'
+  id 'io.spring.dependency-management'
+  id 'java'
+}
+
+repositories {
+  mavenCentral()
+}
+
+springBoot.mainClassName = 'com.kmstechnology.activitycrud.ActivityServiceApplication'
+
+dependencies {
+  implementation('org.springframework.boot:spring-boot-starter-web',
+          'org.springframework.boot:spring-boot-starter-actuator',
+          'org.springframework.boot:spring-boot-starter-jdbc',
+          'org.springframework.boot:spring-boot-starter-data-jpa',
+          'org.springframework.boot:spring-boot-starter-data-redis')
+
+  runtimeOnly 'org.postgresql:postgresql'
+
+  testImplementation 'org.springframework.boot:spring-boot-starter-test'
+}
+
+processResources {
+  filesMatching("META-INF/build.properties") { expand(project.properties) }
+}
+
+test {
+  useJUnitPlatform()
+}
