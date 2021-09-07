@@ -5,6 +5,6 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "flyway")
+@ConfigurationProperties(prefix = "spring.flyway")
 public class FlywayConfig extends FlywayProperties {
 }

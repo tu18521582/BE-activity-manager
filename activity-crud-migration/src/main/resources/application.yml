@@ -7,10 +7,10 @@ spring:
     profiles:
       active: local
   datasource:
-    url: jdbc:postgresql://localhost:5432/activity?currentSchema=activity
+    url: jdbc:postgresql://localhost:5432/activity_manager?currentSchema=activity_manager
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password: 123456
+    password: trungho
     initialize: false
   jpa:
     properties:
@@ -18,6 +18,11 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
+  flyway:
+    enabled: false
+    mixed: true
+    baselineOnMigrate: true
+    schemas: activity_manager
 
 logging:
   pattern:
@@ -25,6 +30,6 @@ logging:
   level:
     com:
       kmstechnology:
-        activitycrud: INFO
+        activitymigration: INFO
     org:
       flywaydb: INFO
