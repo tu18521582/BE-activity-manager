@@ -7,10 +7,10 @@ spring:
     profiles:
       active: local
   datasource:
-    url: jdbc:postgresql://localhost:5432/activity?currentSchema=activity
+    url: jdbc:postgresql://localhost:5432/activity_manager?currentSchema=schema_activity_manager
     driver-class-name: org.postgresql.Driver
     username: postgres
-    password: 123456
+    password: admin
     initialize: false
   jpa:
     properties:
