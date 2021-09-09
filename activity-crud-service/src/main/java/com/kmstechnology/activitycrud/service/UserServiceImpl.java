@@ -19,21 +19,14 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
-        User user = new User(userDTO.getDisplayName(),
-                userDTO.getUsername(),
-                userDTO.getEmail(),
-                userDTO.getPassword());
+        User user = User.builder().displayName(userDTO.getDisplayName()).username(userDTO.getUsername())
+                .email(userDTO.getEmail()).password(userDTO.getPassword()).build();
         userRepository.save(user);
         return userDTO;
     }
 
     private UserDTO toUserDTO(User user) {
-        UserDTO userdto = new UserDTO(
-                user.getDisplayName(),
-                user.getUsername(),
-                user.getEmail(),
-                user.getPassword()
-        );
-        return userdto;
+        return UserDTO.builder().displayName(user.getDisplayName()).username(user.getUsername())
+                .email(user.getEmail()).password(user.getPassword()).build();
     }
 }

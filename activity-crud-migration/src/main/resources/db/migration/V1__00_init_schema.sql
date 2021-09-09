@@ -11,19 +11,27 @@ CREATE TABLE IF NOT EXISTS activity_info
 (
     id BIGSERIAL NOT NULL PRIMARY KEY,
     title VARCHAR,
-    creator VARCHAR,
-    id_creator VARCHAR,
+    id_host_user BIGSERIAL,
     description VARCHAR,
     category VARCHAR,
-    date_org VARCHAR,
-    time_org VARCHAR,
+    date_org Date,
+    time_org Time,
     venue VARCHAR,
-    city VARCHAR
-);
+    city VARCHAR,
+    CONSTRAINT activity_user_user_id_fkey
+    FOREIGN KEY(id_host_user)
+    REFERENCES user_info(id)
+    );
 
-CREATE TABLE IF NOT EXISTS follow_activity_info
+CREATE TABLE IF NOT EXISTS activity_user_info
 (
-    id BIGSERIAL NOT NULL PRIMARY KEY,
-    id_user BIGSERIAL NOT NULL,
-    id_activity BIGSERIAL NOT NULL
-);
+    user_id BIGSERIAL NOT NULL,
+    activity_id BIGSERIAL NOT NULL,
+    PRIMARY KEY(user_id, activity_id),
+    CONSTRAINT fk_activity_user_info_user_user_id_fkey
+    FOREIGN KEY(user_id)
+    REFERENCES user_info(id),
+    CONSTRAINT fk_activity_user_info_activity_user_id_fkey
+    FOREIGN KEY(activity_id)
+    REFERENCES activity_info(id)
+    );
