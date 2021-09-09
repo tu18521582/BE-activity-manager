@@ -5,6 +5,7 @@ import com.kmstechnology.activitycrud.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin(origins = "*")
 @RestController
 public class UserController {
     private final UserService userService;
@@ -14,14 +15,7 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping
-    @CrossOrigin(origins = "http://localhost:8081")
-    public String hello() {
-        return "Hello";
-    }
-
     @PostMapping(path = "/user")
-    @CrossOrigin(origins = "http://localhost:8081")
     public UserDTO createUser(@RequestBody UserDTO userDTO) {
         return userService.createUser(userDTO);
     }
