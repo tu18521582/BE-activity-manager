@@ -4,7 +4,6 @@ import com.kmstechnology.activitycrud.dto.UserDTO;
 import com.kmstechnology.activitycrud.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,15 +25,13 @@ public class UserController {
         return userService.createUser(userDTO);
     }
 
-    @GetMapping(path = "/user")
-    public String getUserByEmailAndPassword(
+    @PostMapping(path = "/user/login")
+    public UserDTO getUserByEmailAndPassword(
             @PathParam("email") String email,
             @PathParam("password") String password) {
-//        if(!StringUtils.isBlank(email)) {
-//            return email;
-////            return userService.getUserByEmailAndPassword(email, password);
-//        }
-//        throw new NoSuchElementException("Invalid email or password");
-        return password;
+        if(!StringUtils.isBlank(email) && !StringUtils.isBlank(email)) {
+            return userService.getUserByEmailAndPassword(email, password);
+        }
+        throw new NoSuchElementException("Invalid email or password");
     }
 }
