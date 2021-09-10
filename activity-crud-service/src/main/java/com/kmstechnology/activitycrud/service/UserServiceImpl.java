@@ -6,6 +6,8 @@ import com.kmstechnology.activitycrud.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.NoSuchElementException;
+
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -23,6 +25,12 @@ public class UserServiceImpl implements UserService{
                 .email(userDTO.getEmail()).password(userDTO.getPassword()).build();
         userRepository.save(user);
         return userDTO;
+    }
+
+    @Override
+    public UserDTO getUserByEmailAndPassword(String email, String password) {
+        User user = userRepository.findByEmailAndPassword(email, password).orElseThrow(NoSuchElementException::new);
+        return toUserDTO(user);
     }
 
     private UserDTO toUserDTO(User user) {
