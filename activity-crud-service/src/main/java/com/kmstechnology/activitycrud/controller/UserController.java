@@ -26,10 +26,10 @@ public class UserController {
     }
 
     @PostMapping(path = "/user/login")
-    public UserDTO getUserByEmailAndPassword(
-            @PathParam("email") String email,
-            @PathParam("password") String password) {
-        if(!StringUtils.isBlank(email) && !StringUtils.isBlank(email)) {
+    public UserDTO getUserByEmailAndPassword(@RequestBody UserDTO account) {
+        String email = account.getEmail();
+        String password = account.getPassword();
+        if(!StringUtils.isBlank(email) && !StringUtils.isBlank(password)) {
             return userService.getUserByEmailAndPassword(email, password);
         }
         throw new NoSuchElementException("Invalid email or password");

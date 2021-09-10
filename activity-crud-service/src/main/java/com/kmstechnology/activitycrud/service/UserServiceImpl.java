@@ -34,7 +34,7 @@ public class UserServiceImpl implements UserService{
     }
 
     private UserDTO toUserDTO(User user) {
-        return UserDTO.builder().displayName(user.getDisplayName()).username(user.getUsername())
+        return UserDTO.builder().id(user.getId()).displayName(user.getDisplayName()).username(user.getUsername())
                 .email(user.getEmail()).password(user.getPassword()).build();
     }
 }
