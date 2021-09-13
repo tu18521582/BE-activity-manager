@@ -20,10 +20,7 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDTO createUser(UserDTO userDTO) {
-        if (userRepository.existsByEmail(userDTO.getEmail())){
-            throw new UnauthorizedException("Email or username already exist");
-        }
-        if (userRepository.existsByUsername(userDTO.getUsername())){
+        if (userRepository.existsByEmailAndUsername(userDTO.getEmail(), userDTO.getUsername())) {
             throw new UnauthorizedException("Email or username already exist");
         }
         User user = User.builder().displayName(userDTO.getDisplayName()).username(userDTO.getUsername())
