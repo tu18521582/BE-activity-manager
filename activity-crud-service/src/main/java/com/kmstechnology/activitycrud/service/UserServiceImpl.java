@@ -22,10 +22,10 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         if (userRepository.existsByEmail(userDTO.getEmail())){
-            throw new RegisterException();
+            throw new RegisterException("Email or username already exist");
         }
         if (userRepository.existsByUsername(userDTO.getUsername())){
-            throw new RegisterException();
+            throw new RegisterException("Email or username already exist");
         }
         User user = User.builder().displayName(userDTO.getDisplayName()).username(userDTO.getUsername())
                 .email(userDTO.getEmail()).password(userDTO.getPassword()).build();
@@ -35,7 +35,9 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDTO getUserByEmailAndPassword(String email, String password) {
-        User user = userRepository.findByEmailAndPassword(email, password).orElseThrow(LoginException::new);
+        User user = userRepository.findByEmailAndPassword(email, password).orElseThrow(()->{
+            return new LoginException("Invalid username or password");
+        });
         return toUserDTO(user);
     }
 

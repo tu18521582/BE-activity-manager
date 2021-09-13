@@ -35,6 +35,6 @@ public class UserController {
         if(!StringUtils.isBlank(email) && !StringUtils.isBlank(password)) {
             return userService.getUserByEmailAndPassword(email, password);
         }
-        throw new LoginException();
+        throw new LoginException("Invalid username or password");
     }
 }
