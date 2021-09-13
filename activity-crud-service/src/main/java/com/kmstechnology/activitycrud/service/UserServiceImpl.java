@@ -1,8 +1,7 @@
 package com.kmstechnology.activitycrud.service;
 
 import com.kmstechnology.activitycrud.dto.UserDTO;
-import com.kmstechnology.activitycrud.exception.RegisterException;
-import com.kmstechnology.activitycrud.exception.LoginException;
+import com.kmstechnology.activitycrud.exception.UnauthorizedException;
 import com.kmstechnology.activitycrud.model.User;
 import com.kmstechnology.activitycrud.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +21,10 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDTO createUser(UserDTO userDTO) {
         if (userRepository.existsByEmail(userDTO.getEmail())){
-            throw new RegisterException("Email or username already exist");
+            throw new UnauthorizedException("Email or username already exist");
         }
         if (userRepository.existsByUsername(userDTO.getUsername())){
-            throw new RegisterException("Email or username already exist");
+            throw new UnauthorizedException("Email or username already exist");
         }
         User user = User.builder().displayName(userDTO.getDisplayName()).username(userDTO.getUsername())
                 .email(userDTO.getEmail()).password(userDTO.getPassword()).build();
@@ -36,7 +35,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public UserDTO getUserByEmailAndPassword(String email, String password) {
         User user = userRepository.findByEmailAndPassword(email, password).orElseThrow(()->{
-            return new LoginException("Invalid username or password");
+            return new UnauthorizedException("Invalid username or password");
         });
         return toUserDTO(user);
     }
