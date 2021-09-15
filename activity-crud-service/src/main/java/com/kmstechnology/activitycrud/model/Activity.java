@@ -30,12 +30,6 @@ public class Activity {
     )
     private String title;
 
-//    @Column(
-//            name = "id_host_user",
-//            nullable = false
-//    )
-//    private Long idcreator;
-
     @Column(
             name = "description"
     )
