@@ -66,7 +66,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "activity_id")
     )
-    Set<Activity> activityAttend;
+    private Set<Activity> activityAttend;
 
     public Set<Activity> getActivities() {
         return activities;

@@ -14,9 +14,9 @@ public class UserDTO {
     private String email;
     private String password;
     private Set<Activity> activities;
+    private Set<Activity> activityAttend;
 
     public UserDTO() {
-
     }
 
     public UserDTO(Builder builder) {
@@ -26,6 +26,7 @@ public class UserDTO {
         this.email = builder.email;
         this.password = builder.password;
         this.activities = builder.activities;
+        this.activityAttend = builder.activityAttend;
     }
 
     public void setId(Long id) {
@@ -72,6 +73,14 @@ public class UserDTO {
         return activities;
     }
 
+    public Set<Activity> getActivityAttend() {
+        return activityAttend;
+    }
+
+    public void setActivityAttend(Set<Activity> activityAttend) {
+        this.activityAttend = activityAttend;
+    }
+
     public void setActivities(Set<Activity> activities) {
         this.activities = activities;
     }
@@ -114,6 +123,7 @@ public class UserDTO {
         private String email;
         private String password;
         private Set<Activity> activities;
+        private Set<Activity> activityAttend;
 
         private Builder() {
 
@@ -146,6 +156,11 @@ public class UserDTO {
 
         public  Builder activities(Set<Activity> activities) {
             this.activities = activities;
+            return this;
+        }
+
+        public  Builder activityAttend(Set<Activity> activityAttend) {
+            this.activityAttend  = activityAttend;
             return this;
         }
 
