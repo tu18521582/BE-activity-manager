@@ -1,8 +1,11 @@
 package com.kmstechnology.activitycrud.dto;
 
+import com.kmstechnology.activitycrud.model.Activity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import java.util.Set;
 
 public class UserDTO {
     private Long id;
@@ -10,6 +13,7 @@ public class UserDTO {
     private String username;
     private String email;
     private String password;
+    private Set<Activity> activities;
 
     public UserDTO() {
 
@@ -21,6 +25,7 @@ public class UserDTO {
         this.username = builder.username;
         this.email = builder.email;
         this.password = builder.password;
+        this.activities = builder.activities;
     }
 
     public void setId(Long id) {
@@ -63,6 +68,14 @@ public class UserDTO {
         this.password = password;
     }
 
+    public Set<Activity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(Set<Activity> activities) {
+        this.activities = activities;
+    }
+
     public static Builder builder() {
         return new Builder();
     }
@@ -100,6 +113,7 @@ public class UserDTO {
         private String username;
         private String email;
         private String password;
+        private Set<Activity> activities;
 
         private Builder() {
 
@@ -127,6 +141,11 @@ public class UserDTO {
 
         public Builder password(String password) {
             this.password = password;
+            return this;
+        }
+
+        public  Builder activities(Set<Activity> activities) {
+            this.activities = activities;
             return this;
         }
 

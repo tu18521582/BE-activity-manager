@@ -3,13 +3,22 @@ package com.kmstechnology.activitycrud.model;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.Set;
 
 @Entity
 @Table(name = "user_info")
@@ -47,6 +56,34 @@ public class User {
     )
     private String password;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_host_user")
+    private Set<Activity> activities;
+
+    @ManyToMany (cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "activity_user_info",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "activity_id")
+    )
+    Set<Activity> activityAttend;
+
+    public Set<Activity> getActivities() {
+        return activities;
+    }
+
+    public void setActivities(Set<Activity> activities) {
+        this.activities = activities;
+    }
+
+    public Set<Activity> getActivityAttend() {
+        return activityAttend;
+    }
+
+    public void setActivityAttend(Set<Activity> activityAttend) {
+        this.activityAttend = activityAttend;
+    }
+
     public User() {
     }
 
@@ -56,6 +93,8 @@ public class User {
         this.username = builder.username;
         this.email = builder.email;
         this.password = builder.password;
+        this.activities = builder.activities;
+        this.activityAttend = builder.activityAttend;
     }
 
     public Long getId() {
@@ -135,6 +174,8 @@ public class User {
         private String username;
         private String email;
         private String password;
+        private Set<Activity> activities;
+        Set<Activity> activityAttend;
 
         private Builder() {
 
@@ -157,6 +198,11 @@ public class User {
 
         public Builder email(String email) {
             this.email = email;
+            return this;
+        }
+
+        public Builder activities(Set<Activity> activities) {
+            this.activities = activities;
             return this;
         }
 
