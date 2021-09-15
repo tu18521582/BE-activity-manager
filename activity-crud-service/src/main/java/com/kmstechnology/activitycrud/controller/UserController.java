@@ -23,10 +23,8 @@ public class UserController {
     public UserDTO createUser(@RequestBody UserDTO userDTO) {
         UserDTO userHashedPassword = userDTO;
         String hash = BCrypt.hashpw(userHashedPassword.getPassword(), BCrypt.gensalt(12));
-        System.out.println("BCrypt hash: " + hash);
         userHashedPassword.setPassword(hash);
-        System.out.println("Password: " + userHashedPassword.getPassword());
-        return userService.createUser(userDTO);
+        return userService.createUser(userHashedPassword);
     }
 
     @PostMapping(path = "/user/login")
