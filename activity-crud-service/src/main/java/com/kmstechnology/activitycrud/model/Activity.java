@@ -1,7 +1,10 @@
 package com.kmstechnology.activitycrud.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -13,6 +16,7 @@ import javax.persistence.Table;
 import java.sql.Date;
 import java.sql.Time;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -61,11 +65,13 @@ public class Activity {
     private String city;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name="id_host_user")
     private User user;
 
-    @ManyToMany(mappedBy = "activityAttend")
-    private Set<User> userAttend;
+    @ManyToMany(mappedBy = "activityAttend", fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<User> userAttend = new HashSet<>();
 
     public Activity() {
     }

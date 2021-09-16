@@ -1,10 +1,9 @@
 package com.kmstechnology.activitycrud.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.hibernate.annotations.Fetch;
-import org.hibernate.annotations.FetchMode;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -18,6 +17,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -56,17 +56,19 @@ public class User {
     )
     private String password;
 
-    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_host_user")
+    @JsonIgnore
     private Set<Activity> activities;
 
-    @ManyToMany (cascade = CascadeType.ALL)
+    @ManyToMany (cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
+    @JsonIgnore
     @JoinTable(
             name = "activity_user_info",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "activity_id")
     )
-    private Set<Activity> activityAttend;
+    private Set<Activity> activityAttend = new HashSet<>();
 
     public Set<Activity> getActivities() {
         return activities;
@@ -175,7 +177,7 @@ public class User {
         private String email;
         private String password;
         private Set<Activity> activities;
-        Set<Activity> activityAttend;
+        private Set<Activity> activityAttend;
 
         private Builder() {
 
@@ -201,13 +203,18 @@ public class User {
             return this;
         }
 
+        public Builder password(String password) {
+            this.password = password;
+            return this;
+        }
+
         public Builder activities(Set<Activity> activities) {
             this.activities = activities;
             return this;
         }
 
-        public Builder password(String password) {
-            this.password = password;
+        public Builder activityAttend(Set<Activity> activityAttend) {
+            this.activityAttend = activityAttend;
             return this;
         }
 
