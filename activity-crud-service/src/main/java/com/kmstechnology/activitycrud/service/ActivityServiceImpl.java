@@ -5,6 +5,7 @@ import com.kmstechnology.activitycrud.dto.UserDTO;
 import com.kmstechnology.activitycrud.model.Activity;
 import com.kmstechnology.activitycrud.model.User;
 import com.kmstechnology.activitycrud.repository.ActivityRepository;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
@@ -47,6 +48,8 @@ public class ActivityServiceImpl implements ActivityService{
     }
 
     private ActivityDTO toActivityDTO(Activity activity) {
+        Hibernate.initialize(activity.getUser());
+        Hibernate.initialize(activity.getUserAttend());
         return ActivityDTO.builder().id(activity.getId()).title(activity.getTitle())
                 .category(activity.getCategory())
                 .description(activity.getDescription()).date(activity.getDate())

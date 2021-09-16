@@ -69,7 +69,7 @@ public class Activity {
     @JoinColumn(name="id_host_user")
     private User user;
 
-    @ManyToMany(mappedBy = "activityAttend", fetch = FetchType.EAGER)
+    @ManyToMany(mappedBy = "activityAttend")
     @JsonIgnore
     private Set<User> userAttend = new HashSet<>();
 
