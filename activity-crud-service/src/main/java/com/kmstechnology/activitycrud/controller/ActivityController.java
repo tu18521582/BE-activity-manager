@@ -42,7 +42,6 @@ public class ActivityController {
 
     @PutMapping(path = "/activity/{id}")
     public void updateActivity(@RequestBody ActivityDTO activityDTO) {
-        System.out.println("update activity" + activityDTO.toString());
         activityService.updateActivity(activityDTO);
     }
 }
