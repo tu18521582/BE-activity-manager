@@ -1,7 +1,5 @@
 package com.kmstechnology.activitycrud.dto;
 
-import com.kmstechnology.activitycrud.model.Activity;
-import com.kmstechnology.activitycrud.model.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

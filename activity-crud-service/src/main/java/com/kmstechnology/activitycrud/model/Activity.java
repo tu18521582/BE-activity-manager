@@ -172,6 +172,10 @@ public class Activity {
         this.city = city;
     }
 
+    public static Activity.Builder builder() {
+        return new Activity.Builder();
+    }
+
     public static final class Builder {
         private Long id;
         private String title;
@@ -236,6 +240,10 @@ public class Activity {
         public Activity.Builder userAttend(Set<User> userAttend) {
             this.userAttend = userAttend;
             return this;
+        }
+
+        public Activity build() {
+            return new Activity(this);
         }
     }
 }

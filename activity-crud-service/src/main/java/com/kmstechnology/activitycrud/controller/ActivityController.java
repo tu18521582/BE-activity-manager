@@ -2,13 +2,17 @@ package com.kmstechnology.activitycrud.controller;
 
 
 import com.kmstechnology.activitycrud.dto.ActivityDTO;
-import com.kmstechnology.activitycrud.model.Activity;
 import com.kmstechnology.activitycrud.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -29,5 +33,16 @@ public class ActivityController {
     @GetMapping(path = "/activity/{id}")
     public ActivityDTO getActivityById(@PathVariable(name = "id") Long id) {
         return activityService.getActivityById(id);
+    }
+
+    @PostMapping(path = "/activity")
+    public void createActivity(@RequestBody ActivityDTO activityDTO, @PathParam("userid") Long userid) {
+        activityService.createActivity(activityDTO, userid);
+    }
+
+    @PutMapping(path = "/activity/{id}")
+    public void updateActivity(@RequestBody ActivityDTO activityDTO) {
+        System.out.println("update activity" + activityDTO.toString());
+        activityService.updateActivity(activityDTO);
     }
 }
