@@ -1,13 +1,17 @@
 package com.kmstechnology.activitycrud.dto;
 
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.kmstechnology.activitycrud.format.LocalDateDeserialize;
+import com.kmstechnology.activitycrud.format.LocalDateSerializer;
 import com.kmstechnology.activitycrud.model.Activity;
 import com.kmstechnology.activitycrud.model.User;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
-import java.sql.Date;
-import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Set;
 
 public class ActivityDTO {
@@ -15,8 +19,12 @@ public class ActivityDTO {
     private String title;
     private String description;
     private String category;
-    private Date date;
-    private Time time;
+
+    @JsonDeserialize(using = LocalDateDeserialize.class)
+    @JsonSerialize(using = LocalDateSerializer.class)
+    private LocalDate date;
+    
+    private LocalTime time;
     private String venue;
     private String city;
     private UserDTO host;
@@ -78,19 +86,19 @@ public class ActivityDTO {
         this.category = category;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public Time getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 
@@ -157,8 +165,8 @@ public class ActivityDTO {
         private String title;
         private String description;
         private String category;
-        private Date date;
-        private Time time;
+        private LocalDate date;
+        private LocalTime time;
         private String venue;
         private String city;
         private UserDTO host;
@@ -188,12 +196,12 @@ public class ActivityDTO {
             return this;
         }
 
-        public Builder date(Date date) {
+        public Builder date(LocalDate date) {
             this.date = date;
             return this;
         }
 
-        public Builder time(Time time) {
+        public Builder time(LocalTime time) {
             this.time = time;
             return this;
         }
