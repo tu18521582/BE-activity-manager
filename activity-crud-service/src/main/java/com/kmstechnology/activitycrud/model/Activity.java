@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.sql.Date;
 import java.sql.Time;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -47,12 +49,12 @@ public class Activity {
     @Column(
             name = "date_org"
     )
-    private Date date;
+    private LocalDate date;
 
     @Column(
             name = "time_org"
     )
-    private Time time;
+    private LocalTime time;
 
     @Column(
             name = "venue"
@@ -140,19 +142,19 @@ public class Activity {
         this.category = category;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 
-    public Time getTime() {
+    public LocalTime getTime() {
         return time;
     }
 
-    public void setTime(Time time) {
+    public void setTime(LocalTime time) {
         this.time = time;
     }
 
@@ -177,8 +179,8 @@ public class Activity {
         private String title;
         private String description;
         private String category;
-        private Date date;
-        private Time time;
+        private LocalDate date;
+        private LocalTime time;
         private String venue;
         private String city;
         private User user;
@@ -208,12 +210,12 @@ public class Activity {
             return this;
         }
 
-        public Activity.Builder date(Date date) {
+        public Activity.Builder date(LocalDate date) {
             this.date = date;
             return this;
         }
 
-        public Activity.Builder time(Time time) {
+        public Activity.Builder time(LocalTime time) {
             this.time = time;
             return this;
         }
