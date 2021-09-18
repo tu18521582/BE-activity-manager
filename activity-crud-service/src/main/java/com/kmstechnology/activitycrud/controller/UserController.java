@@ -21,10 +21,9 @@ public class UserController {
 
     @PostMapping(path = "/user")
     public UserDTO createUser(@RequestBody UserDTO userDTO) {
-        UserDTO userHashedPassword = userDTO;
-        String hash = BCrypt.hashpw(userHashedPassword.getPassword(), BCrypt.gensalt(12));
-        userHashedPassword.setPassword(hash);
-        return userService.createUser(userHashedPassword);
+        String hash = BCrypt.hashpw(userDTO.getPassword(), BCrypt.gensalt(12));
+        userDTO.setPassword(hash);
+        return userService.createUser(userDTO);
     }
 
     @PostMapping(path = "/user/login")
