@@ -7,7 +7,6 @@ import com.kmstechnology.activitycrud.model.Activity;
 import com.kmstechnology.activitycrud.model.User;
 import com.kmstechnology.activitycrud.repository.ActivityRepository;
 import com.kmstechnology.activitycrud.repository.UserRepository;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,9 +62,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public void attendActivity(Long user_id, Long activity_id) {
         Activity activity = activityRepository.findActivityById(activity_id)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("Activity not found"));
         User user = userRepository.findById(user_id)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
         user.getActivityAttend().add(activity);
         userRepository.save(user);
     }
@@ -73,9 +72,9 @@ public class UserServiceImpl implements UserService{
     @Override
     public void unAttendActivity(Long user_id, Long activity_id) {
         Activity activity = activityRepository.findActivityById(activity_id)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("Activity not found"));
         User user = userRepository.findById(user_id)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
         user.getActivityAttend().remove(activity);
         userRepository.save(user);
     }
