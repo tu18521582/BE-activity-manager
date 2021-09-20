@@ -175,7 +175,7 @@ public class User {
         private String email;
         private String password;
         private Set<Activity> activities;
-        Set<Activity> activityAttend;
+        private Set<Activity> activityAttend;
 
         private Builder() {
 
@@ -208,6 +208,11 @@ public class User {
 
         public Builder password(String password) {
             this.password = password;
+            return this;
+        }
+
+        public Builder activityAttend(Set<Activity> activityAttend) {
+            this.activityAttend = activityAttend;
             return this;
         }
 
