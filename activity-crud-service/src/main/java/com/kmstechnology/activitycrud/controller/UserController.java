@@ -55,5 +55,4 @@ public class UserController {
     {
         userService.unAttendActivity(user_id, activity_id);
     }
-
 }

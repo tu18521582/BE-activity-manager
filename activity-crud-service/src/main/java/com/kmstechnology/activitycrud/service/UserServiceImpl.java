@@ -11,11 +11,11 @@ import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -81,10 +81,9 @@ public class UserServiceImpl implements UserService{
     }
 
     private UserDTO toUserDTO(User user) {
-        Hibernate.initialize(user.getActivities());
-        Hibernate.initialize(user.getActivityAttend());
         return UserDTO.builder().id(user.getId()).displayName(user.getDisplayName()).username(user.getUsername())
-                .email(user.getEmail()).password(user.getPassword()).activityAttend(user.getActivityAttend())
-                .activities(user.getActivities()).build();
+                .email(user.getEmail()).password(user.getPassword())
+                .activityAttend(user.getActivityAttend().stream().map(ActivityServiceImpl::toLiteActivityDTO).collect(Collectors.toSet()))
+                .activities(user.getActivities().stream().map(ActivityServiceImpl::toLiteActivityDTO).collect(Collectors.toSet())).build();
     }
 }
