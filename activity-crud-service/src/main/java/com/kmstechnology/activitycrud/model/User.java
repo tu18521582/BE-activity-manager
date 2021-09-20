@@ -215,6 +215,11 @@ public class User {
             return this;
         }
 
+        public Builder activityAttend(Set<Activity> activityAttend) {
+            this.activityAttend = activityAttend;
+            return this;
+        }
+
         public User build() {
             return new User(this);
         }
