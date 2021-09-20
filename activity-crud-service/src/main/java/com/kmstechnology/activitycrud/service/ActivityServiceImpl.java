@@ -39,7 +39,8 @@ public class ActivityServiceImpl implements ActivityService{
 
     @Override
     public ActivityDTO getActivityById(Long id) {
-        Activity activity = activityRepository.findActivityById(id).orElseThrow(NoSuchElementException::new);
+        Activity activity = activityRepository.findActivityById(id)
+                .orElseThrow(() -> new NoSuchElementException("Activity not found"));
         return toActivityDTO(activity);
     }
 
