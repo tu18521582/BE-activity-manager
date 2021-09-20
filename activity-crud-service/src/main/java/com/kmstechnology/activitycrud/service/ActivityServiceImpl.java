@@ -5,14 +5,12 @@ import com.kmstechnology.activitycrud.dto.UserDTO;
 import com.kmstechnology.activitycrud.model.Activity;
 import com.kmstechnology.activitycrud.model.User;
 import com.kmstechnology.activitycrud.repository.ActivityRepository;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,15 +46,24 @@ public class ActivityServiceImpl implements ActivityService{
     }
 
     private ActivityDTO toActivityDTO(Activity activity) {
-        Hibernate.initialize(activity.getUser());
-        Hibernate.initialize(activity.getUserAttend());
         return ActivityDTO.builder().id(activity.getId()).title(activity.getTitle())
                 .category(activity.getCategory())
                 .description(activity.getDescription()).date(activity.getDate())
                 .time(activity.getTime()).venue(activity.getVenue()).city(activity.getCity())
                 .host(toUserDTO(activity.getUser()))
                 .userAttend(activity.getUserAttend()
-                        .stream().map(user -> toUserDTO(user)).collect(Collectors.toSet()))
+                        .stream().map(this::toUserDTO).collect(Collectors.toSet()))
+                .build();
+    }
+
+    public static ActivityDTO toLiteActivityDTO(Activity activity) {
+        return ActivityDTO.builder().id(activity.getId()).title(activity.getTitle())
+                .category(activity.getCategory())
+                .description(activity.getDescription()).date(activity.getDate())
+                .time(activity.getTime()).venue(activity.getVenue()).city(activity.getCity())
+                .host(UserDTO.builder().id(activity.getUser().getId()).build())
+                .userAttend(activity.getUserAttend()
+                        .stream().map(user -> UserDTO.builder().id(user.getId()).build()).collect(Collectors.toSet()))
                 .build();
     }
 }

@@ -1,6 +1,5 @@
 package com.kmstechnology.activitycrud.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
@@ -58,11 +57,9 @@ public class User {
 
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_host_user")
-    @JsonIgnore
     private Set<Activity> activities;
 
     @ManyToMany (cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.DETACH})
-    @JsonIgnore
     @JoinTable(
             name = "activity_user_info",
             joinColumns = @JoinColumn(name = "user_id"),
