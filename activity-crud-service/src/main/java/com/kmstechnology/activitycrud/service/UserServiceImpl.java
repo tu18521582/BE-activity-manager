@@ -79,6 +79,20 @@ public class UserServiceImpl implements UserService{
         userRepository.save(user);
     }
 
+    @Override
+    public int countActivityUserHosted(Long user_id) {
+         User userDTO = userRepository.findById(user_id)
+                 .orElseThrow(()-> new NoSuchElementException("User not found"));
+         return userDTO.getActivities().size();
+    }
+
+    @Override
+    public int countActivityUserAttend(Long user_id) {
+        User userDTO = userRepository.findById(user_id)
+                .orElseThrow(()-> new NoSuchElementException("User not found"));
+        return userDTO.getActivityAttend().size();
+    }
+
     private UserDTO toUserDTO(User user) {
         return UserDTO.builder().id(user.getId()).displayName(user.getDisplayName()).username(user.getUsername())
                 .email(user.getEmail()).password(user.getPassword())

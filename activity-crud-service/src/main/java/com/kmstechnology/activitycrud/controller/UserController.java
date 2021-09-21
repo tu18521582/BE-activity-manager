@@ -55,4 +55,14 @@ public class UserController {
     {
         userService.unAttendActivity(user_id, activity_id);
     }
+
+    @GetMapping(path = "/activityhost/{userid}")
+    public int countActivityUserHosted(@PathVariable(name= "userid") Long user_id) {
+        return userService.countActivityUserHosted(user_id);
+    }
+    
+    @GetMapping(path = "/activityattend/{userid]")
+    public int countActivityUserAttend(@PathVariable(name= "userid") Long user_id) {
+        return userService.countActivityUserAttend(user_id);
+    }
 }
