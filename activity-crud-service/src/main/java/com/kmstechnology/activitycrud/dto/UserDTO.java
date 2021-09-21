@@ -1,7 +1,6 @@
 package com.kmstechnology.activitycrud.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.kmstechnology.activitycrud.model.Activity;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;

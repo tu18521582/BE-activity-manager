@@ -1,8 +1,8 @@
 package com.kmstechnology.activitycrud.service;
 
-import com.kmstechnology.activitycrud.dto.ActivityDTO;
 import com.kmstechnology.activitycrud.dto.UserDTO;
 import com.kmstechnology.activitycrud.exception.UnauthorizedException;
+import com.kmstechnology.activitycrud.mapper.UserMapper;
 import com.kmstechnology.activitycrud.model.Activity;
 import com.kmstechnology.activitycrud.model.User;
 import com.kmstechnology.activitycrud.repository.ActivityRepository;
@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -46,7 +45,7 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findByEmailAndPassword(email, password).orElseThrow(()->{
             return new UnauthorizedException("Invalid username or password");
         });
-        return toUserDTO(user);
+        return UserMapper.toUserDTO(user);
     }
 
     @Override
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService{
         List<User> userList= userRepository.findAll();
         List<UserDTO> userDTOList = new ArrayList<>();
         for(User user: userList){
-            userDTOList.add(toUserDTO(user));
+            userDTOList.add(UserMapper.toUserDTO(user));
         };
         return userDTOList;
     }
@@ -77,12 +76,5 @@ public class UserServiceImpl implements UserService{
                 .orElseThrow(() -> new NoSuchElementException("User not found"));
         user.getActivityAttend().remove(activity);
         userRepository.save(user);
-    }
-
-    private UserDTO toUserDTO(User user) {
-        return UserDTO.builder().id(user.getId()).displayName(user.getDisplayName()).username(user.getUsername())
-                .email(user.getEmail()).password(user.getPassword())
-                .activityAttend(user.getActivityAttend().stream().map(ActivityServiceImpl::toLiteActivityDTO).collect(Collectors.toSet()))
-                .activities(user.getActivities().stream().map(ActivityServiceImpl::toLiteActivityDTO).collect(Collectors.toSet())).build();
     }
 }
