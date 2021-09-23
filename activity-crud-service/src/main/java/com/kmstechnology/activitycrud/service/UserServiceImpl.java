@@ -4,6 +4,7 @@ import com.kmstechnology.activitycrud.dto.UserDTO;
 import com.kmstechnology.activitycrud.exception.UnauthorizedException;
 import com.kmstechnology.activitycrud.model.User;
 import com.kmstechnology.activitycrud.repository.UserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,10 +32,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDTO getUserByEmailAndPassword(String email, String password) {
-        User user = userRepository.findByEmailAndPassword(email, password).orElseThrow(()->{
+        User user = userRepository.findByEmail(email).orElseThrow(()->{
             return new UnauthorizedException("Invalid username or password");
         });
-        return toUserDTO(user);
+        if(BCrypt.checkpw(password, user.getPassword())) {
+            return toUserDTO(user);
+        }
+        throw new UnauthorizedException("Invalid username or password");
     }
 
     private UserDTO toUserDTO(User user) {
