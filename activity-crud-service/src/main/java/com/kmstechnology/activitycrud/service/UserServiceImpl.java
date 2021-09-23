@@ -7,6 +7,7 @@ import com.kmstechnology.activitycrud.model.Activity;
 import com.kmstechnology.activitycrud.model.User;
 import com.kmstechnology.activitycrud.repository.ActivityRepository;
 import com.kmstechnology.activitycrud.repository.UserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -42,27 +43,13 @@ public class UserServiceImpl implements UserService{
 
     @Override
     public UserDTO getUserByEmailAndPassword(String email, String password) {
-        User user = userRepository.findByEmailAndPassword(email, password).orElseThrow(()->{
+        User user = userRepository.findByEmail(email).orElseThrow(()->{
             return new UnauthorizedException("Invalid username or password");
         });
-        return UserMapper.toUserDTO(user);
-    }
-
-    @Override
-    public UserDTO getUserById(Long id) {
-        User user = userRepository.findById(id)
-                .orElseThrow(()-> new NoSuchElementException("User not found"));
-        return UserMapper.toLiteUserDTO(user);
-    }
-
-    @Override
-    public List<UserDTO> getAllUser() {
-        List<User> userList= userRepository.findAll();
-        List<UserDTO> userDTOList = new ArrayList<>();
-        for(User user: userList){
-            userDTOList.add(UserMapper.toUserDTO(user));
-        };
-        return userDTOList;
+        if(BCrypt.checkpw(password, user.getPassword())) {
+            return toUserDTO(user);
+        }
+        throw new UnauthorizedException("Invalid username or password");
     }
 
     @Override
