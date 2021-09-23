@@ -2,12 +2,18 @@ package com.kmstechnology.activitycrud.service;
 
 import com.kmstechnology.activitycrud.dto.UserDTO;
 import com.kmstechnology.activitycrud.exception.UnauthorizedException;
+import com.kmstechnology.activitycrud.mapper.UserMapper;
+import com.kmstechnology.activitycrud.model.Activity;
 import com.kmstechnology.activitycrud.model.User;
+import com.kmstechnology.activitycrud.repository.ActivityRepository;
 import com.kmstechnology.activitycrud.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
 
 
 @Service
@@ -15,10 +21,12 @@ import javax.transaction.Transactional;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final ActivityRepository activityRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ActivityRepository activityRepository) {
         this.userRepository = userRepository;
+        this.activityRepository = activityRepository;
     }
 
     @Override
@@ -37,11 +45,43 @@ public class UserServiceImpl implements UserService{
         User user = userRepository.findByEmailAndPassword(email, password).orElseThrow(()->{
             return new UnauthorizedException("Invalid username or password");
         });
-        return toUserDTO(user);
+        return UserMapper.toUserDTO(user);
     }
 
-    private UserDTO toUserDTO(User user) {
-        return UserDTO.builder().id(user.getId()).displayName(user.getDisplayName()).username(user.getUsername())
-                .email(user.getEmail()).password(user.getPassword()).build();
+    @Override
+    public UserDTO getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(()-> new NoSuchElementException("User not found"));
+        return UserMapper.toLiteUserDTO(user);
+    }
+
+    @Override
+    public List<UserDTO> getAllUser() {
+        List<User> userList= userRepository.findAll();
+        List<UserDTO> userDTOList = new ArrayList<>();
+        for(User user: userList){
+            userDTOList.add(UserMapper.toUserDTO(user));
+        };
+        return userDTOList;
+    }
+
+    @Override
+    public void attendActivity(Long user_id, Long activity_id) {
+        Activity activity = activityRepository.findActivityById(activity_id)
+                .orElseThrow(() -> new NoSuchElementException("Activity not found"));
+        User user = userRepository.findById(user_id)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+        user.getActivityAttend().add(activity);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void unAttendActivity(Long user_id, Long activity_id) {
+        Activity activity = activityRepository.findActivityById(activity_id)
+                .orElseThrow(() -> new NoSuchElementException("Activity not found"));
+        User user = userRepository.findById(user_id)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+        user.getActivityAttend().remove(activity);
+        userRepository.save(user);
     }
 }

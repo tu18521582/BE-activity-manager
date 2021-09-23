@@ -1,20 +1,21 @@
 package com.kmstechnology.activitycrud.dto;
 
-import com.kmstechnology.activitycrud.model.Activity;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 
 import java.util.Set;
 
+@JsonInclude(value = JsonInclude.Include.NON_EMPTY, content = JsonInclude.Include.NON_NULL)
 public class UserDTO {
     private Long id;
     private String displayName;
     private String username;
     private String email;
     private String password;
-    private Set<Activity> activities;
-    private Set<Activity> activityAttend;
+    private Set<ActivityDTO> activities;
+    private Set<ActivityDTO> activityAttend;
 
     public UserDTO() {
     }
@@ -69,19 +70,19 @@ public class UserDTO {
         this.password = password;
     }
 
-    public Set<Activity> getActivities() {
+    public Set<ActivityDTO> getActivities() {
         return activities;
     }
 
-    public Set<Activity> getActivityAttend() {
+    public Set<ActivityDTO> getActivityAttend() {
         return activityAttend;
     }
 
-    public void setActivityAttend(Set<Activity> activityAttend) {
+    public void setActivityAttend(Set<ActivityDTO> activityAttend) {
         this.activityAttend = activityAttend;
     }
 
-    public void setActivities(Set<Activity> activities) {
+    public void setActivities(Set<ActivityDTO> activities) {
         this.activities = activities;
     }
 
@@ -122,8 +123,8 @@ public class UserDTO {
         private String username;
         private String email;
         private String password;
-        private Set<Activity> activities;
-        private Set<Activity> activityAttend;
+        private Set<ActivityDTO> activities;
+        private Set<ActivityDTO> activityAttend;
 
         private Builder() {
 
@@ -154,12 +155,12 @@ public class UserDTO {
             return this;
         }
 
-        public  Builder activities(Set<Activity> activities) {
+        public  Builder activities(Set<ActivityDTO> activities) {
             this.activities = activities;
             return this;
         }
 
-        public  Builder activityAttend(Set<Activity> activityAttend) {
+        public  Builder activityAttend(Set<ActivityDTO> activityAttend) {
             this.activityAttend  = activityAttend;
             return this;
         }

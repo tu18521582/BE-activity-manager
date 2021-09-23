@@ -2,26 +2,28 @@ package com.kmstechnology.activitycrud.service;
 
 import com.kmstechnology.activitycrud.dto.ActivityDTO;
 import com.kmstechnology.activitycrud.dto.UserDTO;
+import com.kmstechnology.activitycrud.mapper.ActivityMapper;
+import com.kmstechnology.activitycrud.mapper.UserMapper;
 import com.kmstechnology.activitycrud.model.Activity;
 import com.kmstechnology.activitycrud.model.User;
 import com.kmstechnology.activitycrud.repository.ActivityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @Transactional
 public class ActivityServiceImpl implements ActivityService{
     private final ActivityRepository activityRepository;
+    private final UserService userService;
 
     @Autowired
-    public ActivityServiceImpl(ActivityRepository activityRepository) {
+    public ActivityServiceImpl(ActivityRepository activityRepository, UserService userService) {
         this.activityRepository = activityRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -30,7 +32,7 @@ public class ActivityServiceImpl implements ActivityService{
         List<ActivityDTO> allActivityDTO = new ArrayList<>();
         for (Activity activity:
                 allActivity) {
-            allActivityDTO.add(toActivityDTO(activity));
+            allActivityDTO.add(ActivityMapper.toActivityDTO(activity));
         }
         return allActivityDTO;
     }
@@ -39,22 +41,31 @@ public class ActivityServiceImpl implements ActivityService{
     public ActivityDTO getActivityById(Long id) {
         Activity activity = activityRepository.findActivityById(id)
                 .orElseThrow(() -> new NoSuchElementException("Activity not found"));
-        return toActivityDTO(activity);
+        return ActivityMapper.toActivityDTO(activity);
     }
 
-    private UserDTO toUserDTO(User user) {
-        return UserDTO.builder().id(user.getId()).displayName(user.getDisplayName()).username(user.getUsername())
-                .email(user.getEmail()).build();
-    }
-
-    private ActivityDTO toActivityDTO(Activity activity) {
-        return ActivityDTO.builder().id(activity.getId()).title(activity.getTitle())
-                .category(activity.getCategory())
-                .description(activity.getDescription()).date(activity.getDate())
-                .time(activity.getTime()).venue(activity.getVenue()).city(activity.getCity())
-                .host(toUserDTO(activity.getUser()))
-                .userAttend(activity.getUserAttend()
-                        .stream().map(user -> toUserDTO(user)).collect(Collectors.toSet()))
+    @Override
+    public void createActivity(ActivityDTO activityDTO, Long userid) {
+        Activity newActivity = Activity.builder().title(activityDTO.getTitle()).category(activityDTO.getCategory())
+                .description(activityDTO.getDescription()).date(activityDTO.getDate())
+                .time(activityDTO.getTime()).venue(activityDTO.getVenue()).city(activityDTO.getCity())
                 .build();
+        UserDTO hostUser = userService.getUserById(userid);
+        newActivity.setUser(UserMapper.toLiteUser(hostUser));
+        activityRepository.save(newActivity);
+    }
+
+    @Override
+    public void updateActivity(ActivityDTO activityDTO) {
+        Activity activityToUpdate = activityRepository.findActivityById(activityDTO.getId())
+                .orElseThrow(NoSuchElementException::new);
+        activityToUpdate.setTitle(activityDTO.getTitle());
+        activityToUpdate.setDescription(activityDTO.getDescription());
+        activityToUpdate.setCategory(activityDTO.getCategory());
+        activityToUpdate.setDate(activityDTO.getDate());
+        activityToUpdate.setTime(activityDTO.getTime());
+        activityToUpdate.setVenue(activityDTO.getVenue());
+        activityToUpdate.setCity(activityDTO.getCity());
+        activityRepository.save(activityToUpdate);
     }
 }
