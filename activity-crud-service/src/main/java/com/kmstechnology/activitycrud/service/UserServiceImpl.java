@@ -2,21 +2,32 @@ package com.kmstechnology.activitycrud.service;
 
 import com.kmstechnology.activitycrud.dto.UserDTO;
 import com.kmstechnology.activitycrud.exception.UnauthorizedException;
+import com.kmstechnology.activitycrud.mapper.UserMapper;
+import com.kmstechnology.activitycrud.model.Activity;
 import com.kmstechnology.activitycrud.model.User;
+import com.kmstechnology.activitycrud.repository.ActivityRepository;
 import com.kmstechnology.activitycrud.repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.NoSuchElementException;
+
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
+    private final ActivityRepository activityRepository;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, ActivityRepository activityRepository) {
         this.userRepository = userRepository;
+        this.activityRepository = activityRepository;
     }
 
     @Override
@@ -41,8 +52,23 @@ public class UserServiceImpl implements UserService{
         throw new UnauthorizedException("Invalid username or password");
     }
 
-    private UserDTO toUserDTO(User user) {
-        return UserDTO.builder().id(user.getId()).displayName(user.getDisplayName()).username(user.getUsername())
-                .email(user.getEmail()).password(user.getPassword()).build();
+    @Override
+    public void attendActivity(Long user_id, Long activity_id) {
+        Activity activity = activityRepository.findActivityById(activity_id)
+                .orElseThrow(() -> new NoSuchElementException("Activity not found"));
+        User user = userRepository.findById(user_id)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+        user.getActivityAttend().add(activity);
+        userRepository.save(user);
+    }
+
+    @Override
+    public void unAttendActivity(Long user_id, Long activity_id) {
+        Activity activity = activityRepository.findActivityById(activity_id)
+                .orElseThrow(() -> new NoSuchElementException("Activity not found"));
+        User user = userRepository.findById(user_id)
+                .orElseThrow(() -> new NoSuchElementException("User not found"));
+        user.getActivityAttend().remove(activity);
+        userRepository.save(user);
     }
 }
