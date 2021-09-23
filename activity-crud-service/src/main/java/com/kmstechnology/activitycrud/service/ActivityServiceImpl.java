@@ -2,28 +2,29 @@ package com.kmstechnology.activitycrud.service;
 
 import com.kmstechnology.activitycrud.dto.ActivityDTO;
 import com.kmstechnology.activitycrud.dto.UserDTO;
+import com.kmstechnology.activitycrud.mapper.ActivityMapper;
+import com.kmstechnology.activitycrud.mapper.UserMapper;
 import com.kmstechnology.activitycrud.model.Activity;
 import com.kmstechnology.activitycrud.model.User;
 import com.kmstechnology.activitycrud.repository.ActivityRepository;
-import com.kmstechnology.activitycrud.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
+import java.util.Set;
 
 @Service
 @Transactional
 public class ActivityServiceImpl implements ActivityService{
     private final ActivityRepository activityRepository;
-    private final UserRepository userRepository;
+    private final UserService userService;
 
     @Autowired
-    public ActivityServiceImpl(ActivityRepository activityRepository, UserRepository userRepository) {
+    public ActivityServiceImpl(ActivityRepository activityRepository, UserService userService) {
         this.activityRepository = activityRepository;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @Override
@@ -32,7 +33,7 @@ public class ActivityServiceImpl implements ActivityService{
         List<ActivityDTO> allActivityDTO = new ArrayList<>();
         for (Activity activity:
                 allActivity) {
-            allActivityDTO.add(toActivityDTO(activity));
+            allActivityDTO.add(ActivityMapper.toActivityDTO(activity));
         }
         return allActivityDTO;
     }
@@ -41,7 +42,7 @@ public class ActivityServiceImpl implements ActivityService{
     public ActivityDTO getActivityById(Long id) {
         Activity activity = activityRepository.findActivityById(id)
                 .orElseThrow(() -> new NoSuchElementException("Activity not found"));
-        return toActivityDTO(activity);
+        return ActivityMapper.toActivityDTO(activity);
     }
 
     @Override
@@ -50,8 +51,8 @@ public class ActivityServiceImpl implements ActivityService{
                 .description(activityDTO.getDescription()).date(activityDTO.getDate())
                 .time(activityDTO.getTime()).venue(activityDTO.getVenue()).city(activityDTO.getCity())
                 .build();
-        User hostUser = userRepository.getById(userid);
-        newActivity.setUser(hostUser);
+        UserDTO hostUser = userService.getUserLiteById(userid);
+        newActivity.setUser(UserMapper.toLiteUser(hostUser));
         activityRepository.save(newActivity);
     }
 
@@ -69,30 +70,13 @@ public class ActivityServiceImpl implements ActivityService{
         activityRepository.save(activityToUpdate);
     }
 
-    private UserDTO toUserDTO(User user) {
-        return UserDTO.builder().id(user.getId()).displayName(user.getDisplayName()).username(user.getUsername())
-                .email(user.getEmail()).build();
+    @Override
+    public Set<ActivityDTO> getActivityUserHosted(Long user_id) {
+        return userService.getUserById(user_id).getActivities();
     }
 
-    private ActivityDTO toActivityDTO(Activity activity) {
-        return ActivityDTO.builder().id(activity.getId()).title(activity.getTitle())
-                .category(activity.getCategory())
-                .description(activity.getDescription()).date(activity.getDate())
-                .time(activity.getTime()).venue(activity.getVenue()).city(activity.getCity())
-                .host(toUserDTO(activity.getUser()))
-                .userAttend(activity.getUserAttend()
-                        .stream().map(this::toUserDTO).collect(Collectors.toSet()))
-                .build();
-    }
-
-    public static ActivityDTO toLiteActivityDTO(Activity activity) {
-        return ActivityDTO.builder().id(activity.getId()).title(activity.getTitle())
-                .category(activity.getCategory())
-                .description(activity.getDescription()).date(activity.getDate())
-                .time(activity.getTime()).venue(activity.getVenue()).city(activity.getCity())
-                .host(UserDTO.builder().id(activity.getUser().getId()).build())
-                .userAttend(activity.getUserAttend()
-                        .stream().map(user -> UserDTO.builder().id(user.getId()).build()).collect(Collectors.toSet()))
-                .build();
+    @Override
+    public Set<ActivityDTO> getActivityUserAttend(Long user_id) {
+        return userService.getUserById(user_id).getActivityAttend();
     }
 }
