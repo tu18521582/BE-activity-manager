@@ -7,4 +7,6 @@ import java.util.List;
 public interface ActivityService {
     List<ActivityDTO> getAllActivity();
     ActivityDTO getActivityById(Long id);
+    void createActivity(ActivityDTO activityDTO, Long userid);
+    void updateActivity(ActivityDTO activityDTO);
 }

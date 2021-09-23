@@ -17,4 +17,9 @@ public class UserMapper {
                 .activityAttend(user.getActivityAttend().stream().map(ActivityMapper::toLiteActivityDTO).collect(Collectors.toSet()))
                 .activities(user.getActivities().stream().map(ActivityMapper::toLiteActivityDTO).collect(Collectors.toSet())).build();
     }
+
+    public static User toLiteUser(UserDTO userDTO) {
+        return User.builder().id(userDTO.getId()).displayName(userDTO.getDisplayName()).username(userDTO.getUsername())
+                .email(userDTO.getEmail()).password(userDTO.getPassword()).build();
+    }
 }
