@@ -40,7 +40,7 @@ public class UserController {
         throw new UnauthorizedException("Invalid username or password");
     }
 
-    @GetMapping(path = "/user")
+    @GetMapping(path = "/users")
     public List<UserDTO> getAllUser() {
         return userService.getAllUser();
     }
