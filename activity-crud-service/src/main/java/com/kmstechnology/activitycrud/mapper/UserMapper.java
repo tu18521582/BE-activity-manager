@@ -13,8 +13,7 @@ public class UserMapper {
 
     public static UserDTO toUserDTO(User user) {
         return UserDTO.builder().id(user.getId()).displayName(user.getDisplayName()).username(user.getUsername())
-                .email(user.getEmail()).password(user.getPassword())
-                .activityAttend(user.getActivityAttend().stream().map(ActivityMapper::toLiteActivityDTO).collect(Collectors.toSet()))
+                .email(user.getEmail()).activityAttend(user.getActivityAttend().stream().map(ActivityMapper::toLiteActivityDTO).collect(Collectors.toSet()))
                 .activities(user.getActivities().stream().map(ActivityMapper::toLiteActivityDTO).collect(Collectors.toSet())).build();
     }
 

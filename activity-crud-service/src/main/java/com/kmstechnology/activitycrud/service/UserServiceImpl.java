@@ -9,6 +9,7 @@ import com.kmstechnology.activitycrud.repository.ActivityRepository;
 import com.kmstechnology.activitycrud.repository.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -23,32 +24,32 @@ public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
     private final ActivityRepository activityRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, ActivityRepository activityRepository) {
+    public UserServiceImpl(UserRepository userRepository, ActivityRepository activityRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.userRepository = userRepository;
         this.activityRepository = activityRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     @Override
-    public UserDTO createUser(UserDTO userDTO) {
+    public String createUser(UserDTO userDTO) {
         if (userRepository.existsByEmailOrUsername(userDTO.getEmail(), userDTO.getUsername())) {
             throw new UnauthorizedException("Email or username already exist");
         }
+        userDTO.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         User user = User.builder().displayName(userDTO.getDisplayName()).username(userDTO.getUsername())
                 .email(userDTO.getEmail()).password(userDTO.getPassword()).build();
         userRepository.save(user);
-        return userDTO;
+        return userDTO.getUsername();
     }
 
     @Override
-    public UserDTO getUserByEmailAndPassword(String email, String password) {
+    public UserDTO getUserByEmail(String email) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(()-> new UnauthorizedException("Invalid username or password"));
-        if(BCrypt.checkpw(password, user.getPassword())) {
-            return UserMapper.toUserDTO(user);
-        }
-        throw new UnauthorizedException("Invalid username or password");
+        return UserMapper.toLiteUserDTO(user);
     }
 
     @Override

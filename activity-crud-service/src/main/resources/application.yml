@@ -31,7 +31,6 @@ spring:
         jdbc:
           lob:
             non_contextual_creation: true
-
 logging:
   level:
     com.kmstechnology.activitycrud: DEBUG
